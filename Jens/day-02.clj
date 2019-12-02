@@ -17,15 +17,14 @@
           (drop (inc store) tape)))
 
 (defn computer [tape noun verb]
-  {:pointer 0
-   :memory  (concat (take 1 tape)
-                    [noun]
-                    [verb]
-                    (drop 3 tape))})
+  (concat (take 1 tape)
+          [noun]
+          [verb]
+          (drop 3 tape)))
 
 (defn run-until-stop [computer]
-  (loop [pointer (:pointer computer)
-         tape (:memory computer)]
+  (loop [pointer 0
+         tape computer]
     (let [next-index (+ pointer 4)
           [opcode p1 p2 p3] (drop pointer tape)]
       (case opcode
