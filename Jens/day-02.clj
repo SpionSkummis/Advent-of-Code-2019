@@ -4,56 +4,56 @@
              (clojure.string/split x #",")
              (map #(Integer/parseInt %) x)))
 
-(defn add-and-store [tape pos1 pos2 store]
-  (concat (take store tape)
-          [(+ (nth tape pos1)
-              (nth tape pos2))]
-          (drop (inc store) tape)))
+(defn add-and-store [mem [p1 p2 store]]
+  (assoc-in mem [store] (+ (nth mem p1) (nth mem p2))))
 
-(defn multiply-and-store [tape pos1 pos2 store]
-  (concat (take store tape)
-          [(* (nth tape pos1)
-              (nth tape pos2))]
-          (drop (inc store) tape)))
+(defn multiply-and-store [mem [p1 p2 store]]
+  (assoc-in mem [store] (* (nth mem p1) (nth mem p2))))
+
+(defn stop [x _] false)
+
+(def instruction-set
+  {1  [add-and-store 3 :memory]
+   2  [multiply-and-store 3 :memory]
+   99 [stop 0 :running]})
 
 (defn computer [tape noun verb]
-  (concat (take 1 tape)
-          [noun]
-          [verb]
-          (drop 3 tape)))
+  {:pointer 0
+   :memory (into [] (concat (take 1 tape)
+                            [noun]
+                            [verb]
+                            (drop 3 tape)))
+   :running true
+   :noun noun
+   :verb verb})
 
-(defn run-until-stop [computer]
-  (loop [pointer 0
-         tape computer]
-    (let [next-index (+ pointer 4)
-          [opcode p1 p2 p3] (drop pointer tape)]
-      (case opcode
-        1 (recur next-index
-                 (add-and-store tape p1 p2 p3))
-        2 (recur next-index
-                 (multiply-and-store tape p1 p2 p3))
-        99 (first tape)))))
+(defn perform-next-instruction [computer]
+  (let [pointer     (:pointer computer)
+        opcode      (nth (:memory computer) pointer)
+        instruction (get instruction-set opcode)
+        parameters  (take (second instruction) (drop (inc pointer) (:memory computer)))
+        target      (nth instruction 2)]
+    (-> computer
+        (update target #((first instruction) % parameters))
+        (update :pointer #(+ % 1 (count parameters))))))
+
+(defn run-program [computer]
+  (first (drop-while :running (iterate perform-next-instruction computer))))
 
 ;; PART ONE
-(println (str "Part one: The value of index 0 when the program stops is " (run-until-stop (computer input 12 2))))
+
+(def part-1 (first (:memory (run-program (computer input 12 2)))))
+
+(printf "Part one: The value in index 0 after running the program is %s\n" part-1)
 
 ;; PART TWO
 
 (def desired-result 19690720)
+(def noun-verb-combos (for [n (range 0 100) v (range 0 100)] [n v]))
 
-(def part-2-answer
-  (loop [n-val 0
-         v-val 0]
-    (let [result (run-until-stop (computer input n-val v-val))
-          reset  (= 99 n-val)]
-      (if (= result desired-result)
-        (+ (* 100 n-val)
-           v-val)
-        (recur (if reset
-                 0
-                 (inc n-val))
-               (if reset
-                 (inc v-val)
-                 v-val))))))
+(def part-2
+  (let [runs          (map #(run-program (computer input (first %) (second %))) noun-verb-combos)
+        successful-run (first (drop-while #(not= desired-result (first (:memory %))) runs))]
+    (+ (* 100 (:noun successful-run)) (:verb successful-run))))
 
-(println (str "Part two: The input pair that produces the result " desired-result " is " part-2-answer))
+(printf "Part two: The noun-verb combination that produces the output %s is %s" desired-result part-2)
