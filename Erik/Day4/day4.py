@@ -1,17 +1,7 @@
 # Input is 147981-691423
 inputLow = 147981
 inputHigh = 691423
-
-test11 = 111111
-test12 = 223450
-test13 = 123789
-test21 = 112233
-test22 = 123444
-test23 = 111122
-
-#print(testInt % 10000 // 1000)
-#print(testInt % 10**6 // 10**5)
-#print(testInt % 10**5 // 10**4)
+# Det kanske hade varit mer "Python" att skriva inputRange = range(147981,691423)?
 
 def makeList(integer):
     # Only 6-digit integers
@@ -58,7 +48,7 @@ def isValidInt2(integer):
             elif(i == 0):
                 if(inList[i] != inList[i+2]):
                     hasSingleDouble = True
-            elif(i == 4):
+            elif(i == len(inList)-2):
                 if(inList[i] != inList[i-1]):
                     hasSingleDouble = True
     if(hasSingleDouble):
@@ -67,11 +57,6 @@ def isValidInt2(integer):
         return False
 
 
-"""
-print(isValidInt2(test21))
-print(isValidInt2(test22))
-print(isValidInt2(test23))
-"""
 possiblePasswords = 0
 possiblePasswords2 = 0
 for pw in range(inputLow, inputHigh):
@@ -79,5 +64,5 @@ for pw in range(inputLow, inputHigh):
         possiblePasswords += 1
     if(isValidInt2(pw)):
         possiblePasswords2 += 1
-print(possiblePasswords)
-print(possiblePasswords2)
+print(f"There are {possiblePasswords} possible passwords using the first set of rules")
+print(f"There are {possiblePasswords2} possible passwords using the second set of rules")
