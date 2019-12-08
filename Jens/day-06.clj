@@ -3,20 +3,6 @@
              (re-seq #"(\w{3})\)(\w{3})" $)
              (map #(drop 1 %) $)))
 
-(def test-input [["COM" "B"]
-                 ["B" "C"]
-                 ["C" "D"]
-                 ["D" "E"]
-                 ["E" "F"]
-                 ["B" "G"]
-                 ["G" "H"]
-                 ["D" "I"]
-                 ["E" "J"]
-                 ["J" "K"]
-                 ["K" "L"]
-                 ["K" "YOU"]
-                 ["I" "SAN"]])
-
 (defn node [parent children]
   {:parent parent
    :children children})
@@ -67,7 +53,7 @@
 
 (def part-2 (let [branch-to-you   (search-up-branch orbit-tree "YOU")
                   branch-to-santa (search-up-branch orbit-tree "SAN")
-                  rest-of-trunk (search-up-branch orbit-tree (first-common-node branch-to-you branch-to-santa))]
+                  rest-of-trunk   (search-up-branch orbit-tree (first-common-node branch-to-you branch-to-santa))]
               (- (+ (count branch-to-you)
                     (count branch-to-santa))
                  (* (count rest-of-trunk) 2)
