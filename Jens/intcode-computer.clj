@@ -33,7 +33,7 @@
       (assoc-in [:memory p] (first (:inputs c)))
       (update :inputs #(drop 1 %))))
 
-(defn stop [c]
+(defn stop [c & _]
   (assoc c :running false))
 
 (def instruction-set
@@ -58,6 +58,9 @@
          :outputs []}
         settings))
 
+(defn extract-parameters [mem p n]
+  (take n (drop (inc p) mem)))
+
 (defn parameter-modes [x n]
   (take n (concat
            (loop [inm  (quot x 100)
@@ -72,10 +75,10 @@
   (let [pointer     (:pointer c)
         opcode      (nth (:memory c) pointer)
         instruction (get instruction-set (mod opcode 100))
-        parameters  (take (second instruction) (drop (inc pointer) (:memory c)))
+        parameters  (extract-parameters (:memory c) pointer (second instruction))
         modes       (parameter-modes opcode (count parameters))]
     (-> c
-        ((first instruction) parameters)
+        ((first instruction) parameters modes)
         (update :pointer + (inc (count parameters))))))
 
 (defn run-program [computer]
