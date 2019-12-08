@@ -6,22 +6,18 @@
     1 x))
 
 (defn add-and-store
-  ([c params]
-   (add-and-store c params [0 0]))
-  ([c [p1 p2 s] [m1 m2 & _]]
-   (assoc-in c [:memory s] (+ (get-value (:memory c) p1 m1)
-                              (get-value (:memory c) p2 m2)))))
+  [c [p1 p2 s] [m1 m2 & _]]
+  (assoc-in c [:memory s] (+ (get-value (:memory c) p1 m1)
+                             (get-value (:memory c) p2 m2))))
 
 (defn multiply-and-store
-  ([c params]
-   (multiply-and-store c params [0 0]))
-  ([c [p1 p2 s] [m1 m2 & _]]
-   (assoc-in c [:memory s] (* (get-value (:memory c) p1 m1)
-                              (get-value (:memory c) p2 m2)))))
+  [c [p1 p2 s] [m1 m2 & _]]
+  (assoc-in c [:memory s] (* (get-value (:memory c) p1 m1)
+                             (get-value (:memory c) p2 m2))))
 
 (defn output-value
-  ([c [p] [m]]
-   (output-value c false))
+  ([c p m]
+   (output-value c p m false))
   ([c [p] [m] print?]
    (let [v (get-value (:memory c) p m)]
      (do (if print? (println v))
@@ -33,6 +29,30 @@
       (assoc-in [:memory p] (first (:inputs c)))
       (update :inputs #(drop 1 %))))
 
+(defn jump-if-true
+  [c [p1 p2] [m1 m2]]
+  (if (not (zero? (get-value (:memory c) p1 m1)))
+    (assoc c :pointer (- (get-value (:memory c) p2 m2) 3))
+    c))
+
+(defn jump-if-false
+  [c [p1 p2] [m1 m2]]
+  (if (zero? (get-value (:memory c) p1 m1))
+    (assoc c :pointer (- (get-value (:memory c) p2 m2) 3))
+    c))
+
+(defn less-than
+  [c [p1 p2 s] [m1 m2 _]]
+  (let [r (if (< (get-value (:memory c) p1 m1) (get-value (:memory c) p2 m2))
+            1 0)]
+    (assoc-in c [:memory s] r)))
+
+(defn equals
+  [c [p1 p2 s] [m1 m2 _]]
+  (let [r (if (= (get-value (:memory c) p1 m1) (get-value (:memory c) p2 m2))
+            1 0)]
+    (assoc-in c [:memory s] r)))
+
 (defn stop [c & _]
   (assoc c :running false))
 
@@ -41,6 +61,10 @@
    2  [multiply-and-store 3]
    3  [store-input 1]
    4  [output-value 1]
+   5  [jump-if-true 2]
+   6  [jump-if-false 2]
+   7  [less-than 3]
+   8  [equals 3]
    99 [stop 0]})
 
 (defn computer [tape settings]
