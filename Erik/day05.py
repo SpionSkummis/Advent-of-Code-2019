@@ -1,6 +1,8 @@
 
+from intcode_computer import importTest
+importTest()
 
-
+"""
 def makeList(integer):
     intList = []
     for i in range(len(str(integer)), 0, -1):
@@ -8,7 +10,8 @@ def makeList(integer):
     return intList
 
 print(makeList(100121))
-
+"""
+"""
 def runProgam(initialState):
     currState = initialState.copy()
     #programLength = len(initialState)
@@ -31,3 +34,4 @@ def runProgam(initialState):
             break
     
     return currState
+"""
