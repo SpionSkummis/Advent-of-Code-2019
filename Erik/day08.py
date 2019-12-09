@@ -1,4 +1,4 @@
-with open("Erik/Day8/input8.txt", "r") as f:
+with open("Erik/inputs/input08.txt", "r") as f:
     inputList = list(f.read().strip())
 
 for i in range(0,len(inputList)):

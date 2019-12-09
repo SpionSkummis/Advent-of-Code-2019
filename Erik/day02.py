@@ -1,4 +1,4 @@
-with open("Erik/Day2/input2.txt") as f:
+with open("Erik/inputs/input02.txt") as f:
     rawList = f.read().strip().split(",")
     initialState = []
     for element in rawList:

@@ -1,4 +1,4 @@
-with open("Erik/Day1/input1.txt") as f:
+with open("Erik/inputs/input01.txt") as f:
     partsList = []
     for line in f:
         partsList.append(int(line.strip()))
