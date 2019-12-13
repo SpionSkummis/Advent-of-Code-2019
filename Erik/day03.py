@@ -52,4 +52,53 @@ for elem in crossSet:
     lenList.append(abs(x) + abs(y))
 print(sorted(lenList)[0])
 
-def stepsToReachIntersect(inTuple, inList1, inList2):
+
+def makeVisitedSet2(inList):
+    firstVisited = set()
+    xPos = 0
+    yPos = 0
+    steps = 0
+    firstVisited.add(((xPos,yPos),(steps)))
+    for instruction in inList:
+        direction = instruction[0]
+        length = int(instruction[1:])
+        if(direction == "U"):
+            for i in range(yPos,(yPos+length)):
+                firstVisited.add(((xPos,i),(steps)))
+                steps += 1
+            yPos += length
+        elif(direction == "D"):
+            for i in range(yPos,(yPos-length),-1):
+                firstVisited.add(((xPos,i),(steps)))
+                steps += 1
+            yPos -= length
+        elif(direction == "R"):
+            for i in range(xPos,(xPos+length)):
+                firstVisited.add(((i,yPos),(steps)))
+                steps += 1
+            xPos += length
+        elif(direction == "L"):
+            for i in range(xPos, (xPos-length),-1):
+                firstVisited.add(((i,yPos),(steps)))
+                steps += 1
+            xPos -= length
+    return firstVisited
+
+
+visited21 = makeVisitedSet2(cable1)
+visited22 = makeVisitedSet2(cable2)
+
+distSet = set()
+for c1elem in visited21:
+    if c1elem[0] in crossSet:
+        for c2elem in visited22:
+            if ((c2elem[0] == c1elem[0]) and (c2elem[0] in crossSet)):
+                distSet.add((c1elem,c2elem))
+
+
+distList = []
+for elem in distSet:
+    distA = elem[0][1]
+    distB = elem[1][1]
+    distList.append(distA + distB)
+print(sorted(distList)[0])
