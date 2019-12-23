@@ -26,7 +26,7 @@ def runProgam(initialList):
 #Initial: before running, replace position 1 with the value 12 and replace position 2 with the value 2"
 initialState[1] = 12
 initialState[2] = 2
-print(runProgam(initialState)[0])
+print(f"Part 1 answer: {runProgam(initialState)[0]}")
 
 #Number to reach 19690720.  474000 too high
 goal = 19690720
@@ -39,7 +39,7 @@ for noun in range(0,100):
         initialState[1] = noun
         initialState[2] = verb
         if(runProgam(initialState)[0] == goal):
-            print(runProgam(initialState)[0])
+            #print(runProgam(initialState)[0])
             noun_final = noun
             verb_final = verb
             found = True
@@ -47,5 +47,5 @@ for noun in range(0,100):
     if(found):
         break
 
-print(noun_final,verb_final)
-print(100 * noun_final + verb_final)
+#print(noun_final,verb_final)
+print(f"Part 2 answer: {100 * noun_final + verb_final}")
