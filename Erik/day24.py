@@ -28,7 +28,6 @@ def checkAdj(golGrid, xPos, yPos):
 
 def simulateMinute(golGrid):
     """Takes a grid, returns another grid with a simulated minute"""
-    #workGrid = golGrid.deepcopy()
     newGrid = deepcopy(golGrid)
     for y in range(len(golGrid)):
         for x in range(len(golGrid[0])):
@@ -51,7 +50,6 @@ def calcBiodiversity(golGrid):
     for y in range(len(golGrid)):
         for x in range(len(golGrid[0])):
             if(golGrid[y][x]):
-                #print(x, y, (2 ** i))
                 bioSum += (2 ** i)
             i += 1
     return bioSum
@@ -79,27 +77,23 @@ print(f"The biodiversity of the first repeated grid is {firstRepeat[1]} found af
 #Part 2:
 def checkAdj2(golStack, currentLevel, xPos, yPos):
     adjBugs = 0
-    for x in [(xPos -1), (xPos + 1)]: #range (xPos -1, xPos +2):
-        if(x > -1 and x < 5): # and x != xPos): #  not(x == xPos or x == 2)): #x != xPos and x != 2): #Get "normal" adj.
+    for x in [(xPos -1), (xPos + 1)]:
+        if(x > -1 and x < 5): #Get "normal" adj.
             adjBugs += golStack[currentLevel][yPos][x]
 
     if(xPos == 0): # Get adj from bigger grid:
         adjBugs += golStack[currentLevel+1][2][1]
-        #print("X1")
     elif(xPos == 4):
         adjBugs += golStack[currentLevel+1][2][3]
-        #print("X2")
     elif(yPos == 2 and xPos == 1): #Get adj from smaller grid
         for a in range(0,5):
             adjBugs += golStack[currentLevel-1][a][0]
-            #print("X3")
     elif(yPos == 2 and xPos == 3):
         for a in range(0,5):
             adjBugs += golStack[currentLevel-1][a][4]
-            #print("X4", golStack[currentLevel-1][a][4], a,x)
 
-    for y in [(yPos -1), (yPos +1)]: # range(yPos -1, yPos +2):
-        if(y > -1 and y < 5): # and y != yPos): # not (y == yPos or y == 2)): #y != yPos and y != 2): #Get "normal" adj.
+    for y in [(yPos -1), (yPos +1)]:
+        if(y > -1 and y < 5): #Get "normal" adj.
             adjBugs += golStack[currentLevel][y][xPos]
         
     if(yPos == 0): # Get adj from bigger grid:
