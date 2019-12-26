@@ -118,7 +118,7 @@ def getStackBugs(golStack):
 def makeGameOfLifeStack(golGrid, stackHeight):
     emptyGrid = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
     resultStack = list()
-    for a in range(0,stackHeight):
+    for _ in range(0,stackHeight):
         resultStack.append(deepcopy(emptyGrid))
     resultStack[(stackHeight // 2)] = deepcopy(golGrid)
     return resultStack
